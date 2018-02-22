@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     @NeedsPermission(Manifest.permission.READ_PHONE_STATE)
     void checkEmulatorDetector() {
-        checkWith(true);
+        checkWith(false);
     }
 
     @OnShowRationale(Manifest.permission.READ_PHONE_STATE)

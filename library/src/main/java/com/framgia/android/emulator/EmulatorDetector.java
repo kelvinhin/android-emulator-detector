@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Build;
+import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -92,7 +93,9 @@ public final class EmulatorDetector {
     private static final String[] NOX_FILES = {
         "fstab.nox",
         "init.nox.rc",
-        "ueventd.nox.rc"
+        "ueventd.nox.rc",
+        "/BigNoxGameHD",
+        "/YSLauncher"               //Folder for Nox's launcher
     };
 
     private static final Property[] PROPERTIES = {
@@ -140,6 +143,7 @@ public final class EmulatorDetector {
         mListPackageName.add("com.google.android.launcher.layouts.genymotion");
         mListPackageName.add("com.bluestacks");
         mListPackageName.add("com.bignox.app");
+        mListPackageName.add("com.vphone.launcher");    //Nox's launcher
     }
     
     public EmulatorDetector setDebug(boolean isDebug) {
@@ -371,7 +375,19 @@ public final class EmulatorDetector {
 
     private boolean checkFiles(String[] targets, String type) {
         for (String pipe : targets) {
-            File qemu_file = new File(pipe);
+            File qemu_file;
+            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+                if(pipe.contains("/") && type.equals("Nox")) {
+                    qemu_file = new File(Environment.getExternalStorageDirectory() + pipe);
+                } else {
+                    qemu_file = new File(pipe);
+                }
+            }
+            else {
+                qemu_file = new File(pipe);
+            }
+
             if (qemu_file.exists()) {
                 log("Check " + type + " is detected");
                 return true;
