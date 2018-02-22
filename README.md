@@ -4,7 +4,7 @@
 
 Easy to detect android emulator
 
-#### Last check: 16/01/2017
+#### Last check: 22/02/2018
     - Checked on real devices in Device Farm (https://aws.amazon.com/device-farm/)
     - BlueStacks
     - Genymotion
@@ -17,7 +17,7 @@ Easy to detect android emulator
 
 #### Change logs
     - 1.4.0 : Update database & With Telephony function auto detect Telephony Support
-
+    - 1.4.1 : Fixed Nox App Player not being detected
 Download
 -------
 #####Gradle:
@@ -36,7 +36,7 @@ allprojects {
 Step 2. Add the dependency
 ```groovy
 dependencies {
-	    compile 'com.github.framgia:android-emulator-detector:1.4.0'
+	    compile 'com.github.daiwei92:android-emulator-detector:1.4.1'
 }
 ```
 
@@ -64,6 +64,7 @@ EmulatorDetector.with(this)
 
 - `addPackageName` To add the package but only on VMs
 - Add permission `android.permission.INTERNET` to detect Virtual Networking
+- (New) Add permission `android.permission.READ_EXTERNAL_STORAGE` to detect some Nox files
 
 Description
 -------
