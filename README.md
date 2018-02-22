@@ -1,6 +1,6 @@
 #Android emulator detector
 
-[![](https://jitpack.io/v/framgia/android-emulator-detector.svg)](https://jitpack.io/#framgia/android-emulator-detector) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Android%20emulator%20detector-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3635)
+[![](https://jitpack.io/v/daiwei92/android-emulator-detector.svg)](https://jitpack.io/#framgia/android-emulator-detector) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Android%20emulator%20detector-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3635)
 
 Easy to detect android emulator
 
@@ -18,28 +18,6 @@ Easy to detect android emulator
 #### Change logs
     - 1.4.0 : Update database & With Telephony function auto detect Telephony Support
     - 1.4.1 : Fixed Nox App Player not being detected
-Download
--------
-#####Gradle:
-
-Step 1. Add it in your root build.gradle at the end of repositories:
-
-```groovy
-allprojects {
-	repositories {
-		...
-		maven { url "https://jitpack.io" }
-	}
-}
-```
-
-Step 2. Add the dependency
-```groovy
-dependencies {
-	    compile 'com.github.daiwei92:android-emulator-detector:1.4.1'
-}
-```
-
 How to use
 -------
 Example:
