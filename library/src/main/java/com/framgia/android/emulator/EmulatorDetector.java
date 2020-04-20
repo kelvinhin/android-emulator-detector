@@ -46,6 +46,10 @@ public final class EmulatorDetector {
         void onResult(boolean isEmulator);
     }
 
+    private enum EmulatorTypes {
+        GENY, ANDY, NOX, BLUE, PIPES, X86
+    }
+
     private static final String[] PHONE_NUMBERS = {
         "15555215554", "15555215556", "15555215558", "15555215560", "15555215562", "15555215564",
         "15555215566", "15555215568", "15555215570", "15555215572", "15555215574", "15555215576",
@@ -96,6 +100,11 @@ public final class EmulatorDetector {
         "ueventd.nox.rc",
         "/BigNoxGameHD",
         "/YSLauncher"               //Folder for Nox's launcher
+    };
+
+    private static final String[] BLUE_FILES = {
+        "/Android/data/com.bluestacks.home",
+        "/Android/data/com.bluestacks.settings"
     };
 
     private static final Property[] PROPERTIES = {
@@ -227,21 +236,23 @@ public final class EmulatorDetector {
     }
 
     private boolean checkBasic() {
-        boolean result = Build.FINGERPRINT.startsWith("generic")
-            || Build.MODEL.contains("google_sdk")
+        boolean result =
+            Build.BOARD.toLowerCase().contains("nox")
+            || Build.BOOTLOADER.toLowerCase().contains("nox")
+            || Build.FINGERPRINT.startsWith("generic")
+            || Build.MODEL.toLowerCase().contains("google_sdk")
             || Build.MODEL.toLowerCase().contains("droid4x")
-            || Build.MODEL.contains("Emulator")
+            || Build.MODEL.toLowerCase().contains("emulator")
             || Build.MODEL.contains("Android SDK built for x86")
-            || Build.MANUFACTURER.contains("Genymotion")
-            || Build.HARDWARE.equals("goldfish")
-            || Build.HARDWARE.equals("vbox86")
+            || Build.MANUFACTURER.toLowerCase().contains("genymotion")
+            || Build.HARDWARE.toLowerCase().contains("goldfish")
+            || Build.HARDWARE.toLowerCase().contains("vbox86")
+            || Build.HARDWARE.toLowerCase().contains("android_x86")
+            || Build.HARDWARE.toLowerCase().contains("nox")
             || Build.PRODUCT.equals("sdk")
             || Build.PRODUCT.equals("google_sdk")
             || Build.PRODUCT.equals("sdk_x86")
             || Build.PRODUCT.equals("vbox86p")
-            || Build.BOARD.toLowerCase().contains("nox")
-            || Build.BOOTLOADER.toLowerCase().contains("nox")
-            || Build.HARDWARE.toLowerCase().contains("nox")
             || Build.PRODUCT.toLowerCase().contains("nox")
             || Build.SERIAL.toLowerCase().contains("nox");
 
@@ -253,15 +264,15 @@ public final class EmulatorDetector {
     }
 
     private boolean checkAdvanced() {
-        boolean result = checkTelephony()
-            || checkFiles(GENY_FILES,"Geny")
-            || checkFiles(ANDY_FILES,"Andy")
-            || checkFiles(NOX_FILES,"Nox")
+        return checkTelephony()
+            || checkFiles(GENY_FILES,EmulatorTypes.GENY)
+            || checkFiles(ANDY_FILES,EmulatorTypes.ANDY)
+            || checkFiles(NOX_FILES,EmulatorTypes.NOX)
+            || checkFiles(BLUE_FILES, EmulatorTypes.BLUE)
             || checkQEmuDrivers()
-            || checkFiles(PIPES,"Pipes")
+            || checkFiles(PIPES,EmulatorTypes.PIPES)
             || checkIp()
-            || (checkQEmuProps() && checkFiles(X86_FILES,"X86"));
-        return result;
+            || (checkQEmuProps() && checkFiles(X86_FILES,EmulatorTypes.X86));
     }
 
     private boolean checkPackageName() {
@@ -373,12 +384,12 @@ public final class EmulatorDetector {
         return false;
     }
 
-    private boolean checkFiles(String[] targets, String type) {
+    private boolean checkFiles(String[] targets, EmulatorTypes type) {
         for (String pipe : targets) {
             File qemu_file;
             if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED) {
-                if(pipe.contains("/") && type.equals("Nox")) {
+                if((pipe.contains("/") && type == EmulatorTypes.NOX) || type == EmulatorTypes.BLUE) {
                     qemu_file = new File(Environment.getExternalStorageDirectory() + pipe);
                 } else {
                     qemu_file = new File(pipe);
